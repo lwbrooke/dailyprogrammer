@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 import click
 import os.path
 import os
+import shutil
 import praw
 import pytz
 import re
@@ -13,9 +14,9 @@ _SUBREDDIT = 'dailyprogrammer'
 _FIRST_SUBMISSION_DATE = datetime(2012, 2, 9, tzinfo=pytz.timezone('America/Los_Angeles'))
 _DATE_FORMAT = '%Y-%m-%d'
 _RATING_PATTERN = r'(?<=\[)(?!psa)[a-z]*(?=\])'
-_SANITIZE_PATTERN = r'(\[[0-9/]+\]|\[[a-z/]+\]|[^0-9a-z\s])'
+_SANITIZE_PATTERN = r'(\[[0-9-/]+\]|\[[a-z/]+\]|[^0-9a-z\s])'
 _SYMBOL_PATTERN = r'[^0-9a-z\s]'
-_WEEKLY_MONTHLY_PATTERN = r'(monthly|weekly)'
+_WEEKLY_MONTHLY_PATTERN = r'(monthly|weekly|week-long)'
 
 
 @click.group()
@@ -39,6 +40,29 @@ def get_today():
     start, end = _get_day_boundaries(today.year, today.month, today.day)
     for submission in subreddit.submissions(start=start, end=end):
         _parse(submission)
+
+
+@cli.command()
+def clean():
+    known_directories = [
+        'all',
+        'bonus',
+        'difficult',
+        'easy',
+        'extra',
+        'hard',
+        'intermediate',
+        'medium',
+        'monthly',
+        'special',
+        'unknown',
+        'weekly'
+    ]
+    for d in known_directories:
+        try:
+            shutil.rmtree(d)
+        except FileNotFoundError:
+            continue
 
 
 def _parse(submission):
