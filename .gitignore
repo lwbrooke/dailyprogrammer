@@ -90,3 +90,5 @@ ENV/
 
 # Vim
 *.swp
+
+praw.ini
