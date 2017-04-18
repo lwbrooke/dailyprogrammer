@@ -39,7 +39,7 @@ func parseLine(line string)(numbers []int) {
     return
 }
 
-func isJolly(numbers []int)(jolly bool) {
+func isJolly(numbers []int) bool {
     differences := make([]int, len(numbers) - 1)
 
     for i, v := range numbers[:len(numbers) - 1] {
