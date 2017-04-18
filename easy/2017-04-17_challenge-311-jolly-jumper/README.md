@@ -1,4 +1,4 @@
-[2017-04-17] Challenge #311 [Easy] Jolly Jumper
+# [2017-04-17] Challenge #311 [Easy] Jolly Jumper
 
 # Description
 

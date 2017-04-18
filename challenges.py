@@ -124,7 +124,7 @@ def _parse(submission):
     click.echo(challenge_dir)
     os.makedirs(challenge_dir, exist_ok=True)
 
-    readme = '{}\n\n{}\n\n{}\n'.format(submission.title, submission.selftext, submission.url)
+    readme = '# {}\n\n{}\n\n{}\n'.format(submission.title, submission.selftext, submission.url)
     with open(os.path.join(challenge_dir, 'README.md'), 'w') as f_out:
         f_out.write(readme)
 

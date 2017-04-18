@@ -1,4 +1,4 @@
-[2017-04-14] Challenge #310 [Hard] The Guards and the Mansion
+# [2017-04-14] Challenge #310 [Hard] The Guards and the Mansion
 
 # Description
 
