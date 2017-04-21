@@ -9,33 +9,31 @@ import (
 )
 
 type address struct {
-    ipv4, mask uint
+    cidr, mask uint
 }
 
 func main() {
     s := bufio.NewScanner(os.Stdin)
     s.Scan() // discard first line
     addresses := make(map[string]address)
-    for {
-        s.Scan()
+    for s.Scan() {
         line := s.Text()
         if line == "" {
             break
         }
 
-        key, addr := parseLine(line)
-        cidr := addr.ipv4 & addr.mask
+        addr := parseLine(line)
         add_key := true
         for k, a := range addresses {
-            if a.ipv4 & addr.mask == cidr {
+            if a.cidr & addr.mask == addr.cidr {
                 delete(addresses, k)
-            } else if addr.ipv4 & a.mask == a.ipv4 & a.mask {
+            } else if addr.cidr & a.mask == a.cidr {
                 add_key = !add_key
                 break
             }
         }
         if add_key {
-            addresses[key] = addr
+            addresses[line] = addr
         }
     }
 
@@ -44,31 +42,30 @@ func main() {
     }
 }
 
-func parseLine(line string)(key string, addr address) {
+func parseLine(line string)(addr address) {
     tokens := strings.Split(line, "/")
-    key = line
 
     var ipv4 uint
-    for i, v := range strings.Split(key, ".") {
+    for i, v := range strings.Split(tokens[0], ".") {
         u64, _ := strconv.ParseUint(v, 10, 32)
         octet := uint(u64)
         octet = octet << uint(8 * (4 - i - 1))
         ipv4 |= octet
     }
 
-    bitmask_bits, _ := strconv.Atoi(tokens[1])
-    var mask uint = getMask(bitmask_bits)
-    addr = address{ipv4, mask}
+    bit_count, _ := strconv.Atoi(tokens[1])
+    mask := getMask(bit_count)
+    addr = address{ipv4 & mask, mask}
 
     return
 }
 
-func getMask(bits int)(mask uint) {
+func getMask(bit_count int)(mask uint) {
     mask = 2
-    for i := 1; i < bits; i++ {
+    for i := 1; i < bit_count; i++ {
         mask = mask * 2
     }
     mask = mask - 1
-    mask = mask << uint(32 - bits)
+    mask = mask << uint(32 - bit_count)
     return
 }
