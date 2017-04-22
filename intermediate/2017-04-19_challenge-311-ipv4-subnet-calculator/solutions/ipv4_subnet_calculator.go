@@ -23,9 +23,7 @@ func main() {
     s.Scan()
     count, _ := strconv.Atoi(s.Text())
     var addresses *node
-    for i := 0; i < count; i++ {
-        s.Scan()
-
+    for i := 0; s.Scan() && i < count; i++ {
         addr := parseLine(s.Text())
         uncovered_address := true
 
