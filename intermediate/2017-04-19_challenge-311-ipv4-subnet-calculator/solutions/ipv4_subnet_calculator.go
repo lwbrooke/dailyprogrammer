@@ -50,7 +50,7 @@ func main() {
     printAll(addresses)
 }
 
-func parseLine(line string)(addr address) {
+func parseLine(line string) address {
     tokens := strings.Split(line, "/")
 
     var ipv4 uint
@@ -61,9 +61,7 @@ func parseLine(line string)(addr address) {
 
     bit_count, _ := strconv.Atoi(tokens[1])
     mask := uint(0xFFFFFFFF) << uint(32 - bit_count)
-    addr = address{ipv4 & mask, mask, line}
-
-    return
+    return address{ipv4 & mask, mask, line}
 }
 
 func printAll(n *node) {
