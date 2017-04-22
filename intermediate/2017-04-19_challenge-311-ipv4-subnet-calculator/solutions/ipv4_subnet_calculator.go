@@ -54,18 +54,8 @@ func parseLine(line string)(addr address) {
     }
 
     bit_count, _ := strconv.Atoi(tokens[1])
-    mask := getMask(bit_count)
+    mask := uint(0xFFFFFFFF) << uint(32 - bit_count)
     addr = address{ipv4 & mask, mask}
 
-    return
-}
-
-func getMask(bit_count int)(mask uint) {
-    mask = 2
-    for i := 1; i < bit_count; i++ {
-        mask = mask * 2
-    }
-    mask = mask - 1
-    mask = mask << uint(32 - bit_count)
     return
 }
