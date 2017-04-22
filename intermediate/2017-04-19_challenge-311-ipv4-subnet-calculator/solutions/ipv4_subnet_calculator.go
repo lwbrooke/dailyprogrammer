@@ -56,8 +56,7 @@ func parseLine(line string)(addr address) {
     var ipv4 uint
     for i, v := range strings.Split(tokens[0], ".") {
         octet, _ := strconv.ParseUint(v, 10, 32)
-        octet = octet << uint(8 * (4 - i - 1))
-        ipv4 |= uint(octet)
+        ipv4 |= uint(octet << uint(24 - 8 * i))
     }
 
     bit_count, _ := strconv.Atoi(tokens[1])
