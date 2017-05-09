@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 
-from datetime import datetime, timezone
+from datetime import datetime
 from dateutil import parser
 import click
-import os.path
 import os
-import shutil
+import os.path
 import praw
-import sys
+import pytz
 import re
+import shutil
+import sys
 
 _SITE_NAME = 'dailyprogrammer-bot'
 _SUBREDDIT = 'dailyprogrammer'
@@ -42,7 +43,9 @@ def cli():
 @cli.command()
 @click.argument('start')
 @click.argument('end', required=False, default='')
-def pull(start, end):
+@click.option('-t', '--timezone', metavar='TZ', default='America/Los_Angeles', show_default=True,
+              help='Specify a timezone for the date range')
+def pull(start, end, timezone):
     """
     Pull challenges for the specified START and END times.
 
@@ -53,9 +56,15 @@ def pull(start, end):
     if start == 'all':
         kwargs = {}
     elif start == 'today':
-        now = datetime.utcnow()
-        start = datetime(now.year, now.month, now.day, 0, 0, 0, tzinfo=timezone.utc).timestamp()
-        end = datetime(now.year, now.month, now.day, 23, 59, 59, tzinfo=timezone.utc).timestamp()
+        try:
+            timezone = pytz.timezone(timezone)
+        except pytz.UnknownTimeZoneError:
+            click.echo('"{}" is an unknown timezone'.format(timezone))
+            sys.exit(1)
+
+        now = datetime.now(timezone)
+        start = datetime(now.year, now.month, now.day, 0, 0, 0, tzinfo=timezone).timestamp()
+        end = datetime(now.year, now.month, now.day, 23, 59, 59, tzinfo=timezone).timestamp()
         kwargs = {'start': start, 'end': end}
     else:
         try:
