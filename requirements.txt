@@ -1,6 +1,9 @@
 click==6.7
 pkg-resources==0.0.0
-praw==4.4.0
-prawcore==0.8.0
+praw==4.5.1
+prawcore==0.10.1
+python-dateutil==2.6.0
+pytz==2017.2
 requests==2.13.0
+six==1.10.0
 update-checker==0.16
