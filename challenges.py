@@ -18,7 +18,7 @@ _RATING_PATTERN = r'(?<=\[)(?!psa)[a-z]*(?=\])'
 _SANITIZE_PATTERN = r'(\[[0-9-/]+\]|\[[a-z/]+\]|[^0-9a-z\s])'
 _SYMBOL_PATTERN = r'[^0-9a-z\s]'
 _WEEKLY_MONTHLY_PATTERN = r'(monthly|weekly|week-long)'
-_KNOWN_DIRECTORIES = [
+_KNOWN_DIRECTORIES = (
     'all',
     'bonus',
     'difficult',
@@ -31,7 +31,12 @@ _KNOWN_DIRECTORIES = [
     'special',
     'unknown',
     'weekly'
-]
+)
+_TITLE_IDENTIFIERS = (
+    'challenge #',
+    'chalenge #',
+    'weekly #'
+)
 
 
 @click.group()
@@ -122,7 +127,7 @@ def _get_challenges(start=None, end=None):
 
 def _parse(submission):
     title = submission.title.lower()
-    if 'challenge #' not in title and 'weekly #' not in title:
+    if all(i not in title for i in _TITLE_IDENTIFIERS):
         return
 
     sub_date = datetime.fromtimestamp(submission.created_utc).strftime(_DATE_FORMAT)
